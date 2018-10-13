@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package mandyas;
+package io.manwe.minecraft;
 
 import "google/protobuf/empty.proto";
 

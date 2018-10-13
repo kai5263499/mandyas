@@ -10,6 +10,8 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/kai5263499/mandyas/domain"
+
 	log "github.com/sirupsen/logrus"
 )
 
@@ -68,6 +70,18 @@ func removeZombies(ctx context.Context, wg *sync.WaitGroup) {
 		default:
 		}
 	}
+}
+
+func startGrpc() {
+	config := &domain.Config{
+		GrpcPort: 9000,
+	}
+	serviceServer := domain.MandyasService{}
+	service := &domain.Server{
+		Conf:          config,
+		ServiceServer: serviceServer,
+	}
+	service.Start()
 }
 
 func run(command string) error {
