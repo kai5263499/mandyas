@@ -10,3 +10,13 @@
 
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
+
+# Ignore vendored dependencies
+# These should be pulled in by go dep
+vendor/
+
+# Ignore compiled artifacts
+pkg/
+
+# Ignore proto generations
+*.pb.go
