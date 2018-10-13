@@ -17,3 +17,6 @@ vendor/
 
 # Ignore compiled artifacts
 pkg/
+
+# Ignore proto generations
+*.pb.go
