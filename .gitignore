@@ -20,3 +20,6 @@ pkg/
 
 # Ignore proto generations
 *.pb.go
+
+# Visual Studio code
+.vscode
