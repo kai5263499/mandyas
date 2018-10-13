@@ -1,4 +1,4 @@
-package domain
+package server
 
 import (
 	"fmt"
@@ -9,12 +9,13 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 
+	"github.com/kai5263499/mandyas/domain"
 	pb "github.com/kai5263499/mandyas/generated"
 )
 
 type Server struct {
 	Cmd           *exec.Cmd
-	Conf          *Config
+	Conf          *domain.Config
 	ServiceServer pb.MandyasServiceServer
 	lis           *net.Listener
 	grpcServer    *grpc.Server
