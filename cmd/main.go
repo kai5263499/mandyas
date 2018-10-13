@@ -72,16 +72,17 @@ func removeZombies(ctx context.Context, wg *sync.WaitGroup) {
 	}
 }
 
-func startGrpc() {
+func startGrpc(cmd *exec.Cmd) {
 	config := &domain.Config{
 		GrpcPort: 9000,
 	}
 	serviceServer := domain.MandyasService{}
 	service := &domain.Server{
+		Cmd:           cmd,
 		Conf:          config,
 		ServiceServer: serviceServer,
 	}
-	service.Start()
+	go service.Start()
 }
 
 func run(command string) error {
@@ -95,6 +96,9 @@ func run(command string) error {
 	// Define command and rebind
 	// stdout and stdin
 	cmd := exec.Command("sh", "-c", command)
+
+	startGrpc(cmd)
+
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	// Create a dedicated pidgroup

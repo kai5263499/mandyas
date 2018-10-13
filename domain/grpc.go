@@ -3,6 +3,7 @@ package domain
 import (
 	"fmt"
 	"net"
+	"os/exec"
 
 	log "github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
@@ -12,6 +13,7 @@ import (
 )
 
 type Server struct {
+	Cmd           *exec.Cmd
 	Conf          *Config
 	ServiceServer pb.MandyasServiceServer
 	lis           *net.Listener
