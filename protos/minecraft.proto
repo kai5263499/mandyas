@@ -1,17 +1,19 @@
 syntax = "proto3";
 
-package io.manwe.minecraft;
+package generated;
 
-import "google/protobuf/empty.proto";
+message GetServerOutputRequest {}
+message GetStatusRequest {}
+message ServerCommandResponse {}
 
 // The FlowFile service definition.
 service MandyasService {
-    rpc SendCommand (ServerCommand) returns (google.protobuf.Empty) {}
-    rpc GetServerOutput (google.protobuf.Empty) returns (stream ServerOutput) {}
-    rpc GetStatus (google.protobuf.Empty) returns (ServerStatus) {}
+    rpc SendCommand (ServerCommandRequest) returns (ServerCommandResponse) {}
+    rpc GetServerOutput (GetServerOutputRequest) returns (stream ServerOutput) {}
+    rpc GetStatus (GetStatusRequest) returns (ServerStatus) {}
 }
 
-message ServerCommand {
+message ServerCommandRequest {
     uint64 id = 1;
     uint64 utctimestamp = 2;
     bytes command = 3;

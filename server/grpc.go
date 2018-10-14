@@ -13,6 +13,7 @@ import (
 	pb "github.com/kai5263499/mandyas/generated"
 )
 
+// Server grpc server
 type Server struct {
 	Cmd           *exec.Cmd
 	Conf          *domain.Config
@@ -21,6 +22,7 @@ type Server struct {
 	grpcServer    *grpc.Server
 }
 
+// Start the grpc service
 func (s *Server) Start() error {
 	listenAddress := fmt.Sprintf("localhost:%d", s.Conf.GrpcPort)
 
