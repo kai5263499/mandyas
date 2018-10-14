@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/kai5263499/mandyas/domain"
+	"github.com/kai5263499/mandyas/server"
 
 	log "github.com/sirupsen/logrus"
 )
@@ -76,8 +77,8 @@ func startGrpc(cmd *exec.Cmd) {
 	config := &domain.Config{
 		GrpcPort: 9000,
 	}
-	serviceServer := domain.MandyasService{}
-	service := &domain.Server{
+	serviceServer := server.MandyasService{}
+	service := &server.Server{
 		Cmd:           cmd,
 		Conf:          config,
 		ServiceServer: serviceServer,
