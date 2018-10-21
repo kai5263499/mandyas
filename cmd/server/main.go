@@ -12,7 +12,6 @@ import (
 
 	"github.com/kai5263499/mandyas/domain"
 	"github.com/kai5263499/mandyas/server"
-
 	log "github.com/sirupsen/logrus"
 )
 
@@ -31,11 +30,10 @@ func main() {
 	log.Infof("Main command launched : %s", mainCmd)
 	err := run(mainCmd)
 	if err != nil {
-		log.Infof("Main command failed")
-		log.Infof("%s\n", err)
+		log.Errorf("Main command failed %#+v\n", err)
 		mainRC = 1
 	} else {
-		log.Infof("Main command exited")
+		log.Errorf("Main command exited")
 	}
 
 	// Wait removeZombies goroutine
@@ -73,35 +71,40 @@ func removeZombies(ctx context.Context, wg *sync.WaitGroup) {
 	}
 }
 
-func startGrpc(cmd *exec.Cmd) {
-	config := &domain.Config{
-		GrpcPort: 9000,
-	}
-	serviceServer := server.MandyasService{}
-	service := &server.Server{
-		Cmd:           cmd,
-		Conf:          config,
-		ServiceServer: serviceServer,
-	}
-	go service.Start()
-}
-
 func run(command string) error {
-
 	// Register chan to receive system signals
 	sigs := make(chan os.Signal, 1)
 	defer close(sigs)
 	signal.Notify(sigs)
 	defer signal.Reset()
 
+	config := &domain.Config{
+		GrpcPort: 9000,
+	}
+
+	var err error
+
 	// Define command and rebind
 	// stdout and stdin
 	cmd := exec.Command("sh", "-c", command)
 
-	startGrpc(cmd)
+	stdout, err := cmd.StdoutPipe()
+	if err != nil {
+		log.Fatal("error opening stdout pipe:", err)
+		return err
+	}
 
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
+	stdin, err := cmd.StdinPipe()
+	if err != nil {
+		log.Fatal(err)
+		return err
+	}
+
+	grpcServer, _ := server.New(config, stdout, stdin)
+
+	log.Infof("starting grpcServer with pipe %#+v", stdout)
+	grpcServer.Start()
+
 	// Create a dedicated pidgroup
 	// used to forward signals to
 	// main process and all children
@@ -119,9 +122,10 @@ func run(command string) error {
 		}
 	}()
 
-	// Start defined command
-	err := cmd.Start()
+	log.Infof("starting command")
+	err = cmd.Start()
 	if err != nil {
+		log.Fatalf("error starting command %#+v", err)
 		return err
 	}
 

@@ -36,3 +36,7 @@ required = ["github.com/sirupsen/logrus", "github.com/golang/protobuf/ptypes/emp
 [[constraint]]
   name = "google.golang.org/grpc"
   version = "1.15.0"
+
+[[constraint]]
+  name = "github.com/satori/go.uuid"
+  version = "1.2.0"
